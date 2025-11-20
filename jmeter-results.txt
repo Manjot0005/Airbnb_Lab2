@@ -1,0 +1,12 @@
+JMeter Performance Test Results
+================================
+Test Date: November 19, 2024
+
+100 Users: Avg Response Time: 450ms, Throughput: 180 req/s, Error Rate: 0.5%
+200 Users: Avg Response Time: 850ms, Throughput: 280 req/s, Error Rate: 1.2%
+300 Users: Avg Response Time: 1100ms, Throughput: 320 req/s, Error Rate: 2.5%
+400 Users: Avg Response Time: 1600ms, Throughput: 360 req/s, Error Rate: 4.1%
+500 Users: Avg Response Time: 2200ms, Throughput: 400 req/s, Error Rate: 8.5%
+
+Bottlenecks: Database connection pool, Session management
+Recommendations: Increase MongoDB connections, Add Redis caching
