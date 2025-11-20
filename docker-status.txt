@@ -1,0 +1,4 @@
+CONTAINER ID   IMAGE                             COMMAND                  CREATED        STATUS        PORTS                                             NAMES
+74445264d746   confluentinc/cp-kafka:7.5.0       "/etc/confluent/dock…"   22 hours ago   Up 22 hours   0.0.0.0:9092->9092/tcp, [::]:9092->9092/tcp       airbnb_lab1-airbnb-kafka-1
+4125d1d8d19f   mongo:7.0                         "docker-entrypoint.s…"   22 hours ago   Up 22 hours   0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp   airbnb_lab1-airbnb-mongodb-1
+ce2cafb5fddc   confluentinc/cp-zookeeper:7.5.0   "/etc/confluent/dock…"   22 hours ago   Up 22 hours   0.0.0.0:2181->2181/tcp, [::]:2181->2181/tcp       airbnb_lab1-airbnb-zookeeper-1
