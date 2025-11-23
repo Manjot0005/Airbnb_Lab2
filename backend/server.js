@@ -5,6 +5,8 @@ const session = require('express-session');
 const cors = require('cors');
 const path = require('path');
 const { sequelize } = require('./models');
+const { initProducer, initConsumer } = require("./config/kafka");
+const { startBookingEventConsumer } = require("./services/kafkaService");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -160,6 +162,17 @@ async function startServer() {
     // Sync database models
     await sequelize.sync({ alter: true });
     console.log('✅ Database models synced');
+
+    // Initialize Kafka
+    try {
+      await initProducer();
+      await initConsumer();
+      await startBookingEventConsumer();
+      console.log("✅ Kafka initialized successfully");
+    } catch (kafkaError) {
+      console.error("⚠️  Kafka initialization failed:", kafkaError.message);
+      console.log("⚠️  Server will continue without Kafka");
+    }
     
     // Start Express server
     app.listen(PORT, () => {

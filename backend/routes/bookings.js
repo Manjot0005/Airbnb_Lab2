@@ -1,3 +1,5 @@
+const { sendBookingCreatedEvent, sendBookingStatusUpdateEvent } = require("../services/kafkaService");
+
 // backend/routes/bookings.js - COMPLETE BOOKING MANAGEMENT
 const express = require('express');
 const router = express.Router();
@@ -88,12 +90,35 @@ router.post('/', ensureAuth, async (req, res) => {
       ]
     });
 
+    // Send Kafka event for new booking
+    await sendBookingCreatedEvent({
+      id: completeBooking.id,
+      listingId: completeBooking.listingId,
+      travelerId: completeBooking.travelerId,
+      checkIn: completeBooking.checkIn,
+      checkOut: completeBooking.checkOut,
+      totalPrice: completeBooking.totalPrice,
+      status: completeBooking.status
+    });
+
     res.status(201).json({
       message: 'Booking request created successfully',
       booking: completeBooking
     });
   } catch (err) {
     console.error('❌ Error creating booking:', err);
+    res.status(500).json({ error: 'Failed to create booking' });
+
+    // Send Kafka event for new booking
+    await sendBookingCreatedEvent({
+      id: completeBooking.id,
+      listingId: completeBooking.listingId,
+      travelerId: completeBooking.travelerId,
+      checkIn: completeBooking.checkIn,
+      checkOut: completeBooking.checkOut,
+      totalPrice: completeBooking.totalPrice,
+      status: completeBooking.status
+    });
     res.status(500).json({ error: 'Failed to create booking' });
   }
 });

@@ -1,3 +1,5 @@
+const { sendBookingStatusUpdateEvent } = require("../services/kafkaService");
+
 // backend/routes/owner.js - COMPLETE OWNER FEATURES
 const express = require('express');
 const router = express.Router();
@@ -276,6 +278,13 @@ router.put('/bookings/:id/accept', ensureAuth, ensureOwner, async (req, res) => 
 
     await booking.update({ status: 'accepted' });
 
+    // Send Kafka event for booking acceptance
+    await sendBookingStatusUpdateEvent(
+      booking.id,
+      "accepted",
+      req.session.user.id
+    );
+
     // Block dates
     const listing = await Listing.findByPk(booking.listingId);
     const blockedDates = listing.blockedDates || [];
@@ -316,6 +325,13 @@ router.put('/bookings/:id/reject', ensureAuth, ensureOwner, async (req, res) => 
     }
 
     await booking.update({ status: 'rejected' });
+
+    // Send Kafka event for booking rejection
+    await sendBookingStatusUpdateEvent(
+      booking.id,
+      "rejected",
+      req.session.user.id
+    );
 
     res.json({ 
       message: 'Booking rejected',
